@@ -1,106 +1,128 @@
 pragma solidity ^0.4.4;
 
 contract ProofOfProduceQuality {
-   struct ProofEntry {
-       bool exists;
-       address owner;
-       bytes encryptedProof;
-       string publicProof;
-       address previousOwner;
-   }
+    struct ProofEntry {
+        bool exists;
+        address owner;
+        bytes encryptedProof;
+        string publicProof;
+        string previousTrackingId;
+    }
   
-  address private rootOwner;
-   // map of an keyId and a proofEntry
-  mapping (string => ProofEntry) private proofs;
+    // map of an trackingId and a proofEntry
+    mapping (string => ProofEntry) private proofs;
+    // map of trackingId to addresses to check if an trackingId can be use as a previousTrackingId 
+    mapping (string => mapping (address => bool )) private isTransfered;
 
-  function ProofOfProduceQuality() {
-    rootOwner = "0x0000000000000000000000000000000000000000";
-  }
+    function ProofOfProduceQuality() {
+
+    }
   
-  // store a proof of quality in the contract state
-  function storeProof(string keyId, bytes encryptedProof, string publicProof) returns(bool success) {
-   // check if keyId already exists
-   if (hasProof(keyId) == false) {
-      proofs[keyId] = ProofEntry(
-        { 
-          exists : true, 
-          owner : msg.sender,
-          encryptedProof : encryptedProof,
-          publicProof : publicProof,
-          previousOwner : rootOwner
-        });
-      return true;
+    // create a new tracking and store the inital proof
+    function startTracking(string trackingId, bytes encryptedProof, string publicProof) returns(bool success) {
+     // check if trackingId already exists
+        if (hasProof(trackingId) == false) {
+            proofs[trackingId] = ProofEntry(true, msg.sender, encryptedProof, publicProof, "root");
+            return true;
+        }
+        else {
+            return false;
+        }
     }
-    else {
-      // a proof with this keyId already exists
-      return false;
+
+    // add aproof to an existing tracking - requires that the previousOwner transfered the ownership 
+    function storeProof(string trackingId, string previousTrackingId, bytes encryptedProof, string publicProof) returns(bool success) {
+    // check if trackingId already exists
+        if (hasProof(trackingId) == false) {
+            if (isTransfered[previousTrackingId][msg.sender] == false) {
+                // no rights to use previousTrackingId. Owner need to transfer the trackingId first
+                return false;
+            }
+            proofs[trackingId] = ProofEntry(true, msg.sender, encryptedProof, publicProof, previousTrackingId);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
-  }
  
-  function transfer(string keyId, address newOwner) {
-    if (hasProof(keyId) == true) {
-      ProofEntry memory pe = getProofInternal(keyId);
-      if (msg.sender == pe.owner) {
-        proofs[keyId].previousOwner = msg.sender;
-      }
+    function transfer(string trackingId, address newOwner) returns(bool success) {
+        if (hasProof(trackingId) == true) {
+            ProofEntry memory pe = getProofInternal(trackingId);
+            if (msg.sender == pe.owner) {
+                isTransfered[trackingId][newOwner] = true;
+            }
+            return true;
+        }
+        else {
+            return false;
+        }
     }
-    else {
-      throw;
+
+    // returns true if proof is stored
+    function hasProof(string trackingId) constant internal returns(bool exists) {
+            return proofs[trackingId].exists;
     }
-  }
-  // returns true if proof is stored
-  function hasProof(string keyId) constant internal returns(bool exists) {
-    return proofs[keyId].exists;
-  }
 
 
-  // returns the proof
-  function getProofInternal(string keyId) constant internal returns(ProofEntry proof) {
-    if (hasProof(keyId) == true) {
-      return proofs[keyId];
+    // returns the proof
+    function getProofInternal(string trackingId) constant internal returns(ProofEntry proof) {
+        if (hasProof(trackingId) == true) {
+            return proofs[trackingId];
+        }
+        else {
+            throw;
+        }
     }
-    else {
-      throw;
-    }
-  }
 
-  function getProof(string keyId) constant returns(address owner, bytes encryptedProof, string publicProof) {
-    if (hasProof(keyId) == true) {
-       ProofEntry memory pe = getProofInternal(keyId);
-       owner = pe.owner;
-       encryptedProof = pe.encryptedProof;
-       publicProof = pe.publicProof;
+    function getProof(string trackingId) constant returns(address owner, bytes encryptedProof, string publicProof, string previousTrackingId) {
+        if (hasProof(trackingId) == true) {
+            ProofEntry memory pe = getProofInternal(trackingId);
+            owner = pe.owner;
+            encryptedProof = pe.encryptedProof;
+            publicProof = pe.publicProof;
+            previousTrackingId = pe.previousTrackingId;
+        }
+        else {
+            throw;
+        }
     }
-    else {
-      throw;
-    }
-  }
-  // returns the encrypted part of the proof
-  function getEncryptedProof(string keyId) constant returns(bytes encryptedProof) {
-    if (hasProof(keyId) == true) {
-      return getProofInternal(keyId).encryptedProof;
-    }
-    else {
-      throw;
-    }
-  }
 
-      // returns the public part of the proof
-  function getPublicProof(string keyId) constant returns(string publicProof) {
-    if (hasProof(keyId) == true) {
-      return getProofInternal(keyId).publicProof;
+    // returns the encrypted part of the proof
+    function getEncryptedProof(string trackingId) constant returns(bytes encryptedProof) {
+        if (hasProof(trackingId) == true) {
+            return getProofInternal(trackingId).encryptedProof;
+        }
+        else {
+            throw;
+        }
     }
-    else {
-      throw;
-    }
-  }
 
-  function getOwner(string keyId) constant returns(address owner) {
-    if (hasProof(keyId) == true) {
-      return getProofInternal(keyId).owner;
+    // returns the public part of the proof
+    function getPublicProof(string trackingId) constant returns(string publicProof) {
+        if (hasProof(trackingId) == true) {
+            return getProofInternal(trackingId).publicProof;
+        }
+        else {
+            throw;
+        }
     }
-    else {
-      throw;
+
+    function getOwner(string trackingId) constant returns(address owner) {
+        if (hasProof(trackingId) == true) {
+            return getProofInternal(trackingId).owner;
+        }
+        else {
+            throw;
+        }
     }
-  }
+
+    function getPreviousTrackingId(string trackingId) constant returns(string previousTrackingId) {
+        if (hasProof(trackingId) == true) {
+            return getProofInternal(trackingId).previousTrackingId;
+        }
+        else {
+            throw;
+        }
+    }
 }

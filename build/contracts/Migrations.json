@@ -64,10 +64,16 @@
     "1496992238695": {
       "events": {},
       "links": {},
-      "address": "0x8e4d56a2bd4f0eed381647121ee1f25868623846",
-      "updated_at": 1497002804732
+      "address": "0xccafa3955aa97d62e3ae7a734bded4656f612546",
+      "updated_at": 1497015261713
+    },
+    "1497015295914": {
+      "events": {},
+      "links": {},
+      "address": "0x61cfdc8c506178518b90e358a2bd9cc3f93cf100",
+      "updated_at": 1497015308844
     }
   },
   "schema_version": "0.0.5",
-  "updated_at": 1497002804732
+  "updated_at": 1497015308844
 }
