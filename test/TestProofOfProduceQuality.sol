@@ -13,11 +13,10 @@ contract TestProofOfProduceQuality{
     expectedEncrypted[1] = 0x14;
     var expectedPublic = "testproof";
 
-    var chain = "first_key";
-
-    proof.storeProof("test_id", chain, expectedEncrypted, expectedPublic);
-    var ep = proof.getEncryptedProof("test_id");
-    var pp = proof.getPublicProof("test_id");
+    proof.storeProof("test_id", expectedEncrypted, expectedPublic);
+    proof.getEncryptedProof("test_id");
+    proof.getPublicProof("test_id");
+    proof.getProof("test_id");
     // Assert.equal(proof.getProof("test_id").publicProof, expectedPublic, "proof should be available");
   }
 }
