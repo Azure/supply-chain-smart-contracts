@@ -12,7 +12,7 @@ npm install -g truffle
 ```
 
 ### test-rpc
-install [testrpc](https://github.com/ethereumjs/testrpc) as your local geth-rpc or use teh Docker image
+install [testrpc](https://github.com/ethereumjs/testrpc) as your local geth-rpc or use the Docker image
 
 ## build and test
 
