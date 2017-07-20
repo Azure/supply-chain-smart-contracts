@@ -14,6 +14,12 @@ contract ProofOfProduceQuality {
   // map of trackingId to addresses to check if a trackingId can be use as a previousTrackingId 
   mapping (string => mapping (address => bool )) private isTransfered;
 
+
+  event TrackingStarted(
+    address from,
+    string trackingId
+  );
+
   function ProofOfProduceQuality() {
 
   }
@@ -24,6 +30,7 @@ contract ProofOfProduceQuality {
     // if we don't already have this trackingId- add it
     if (!hasProof(trackingId)) {
       proofs[trackingId] = ProofEntry(msg.sender, encryptedProof, publicProof, "root");
+      TrackingStarted(msg.sender, trackingId);
       return true;
     }
     
