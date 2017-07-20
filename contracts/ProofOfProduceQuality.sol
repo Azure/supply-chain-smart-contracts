@@ -2,7 +2,6 @@ pragma solidity ^0.4.4;
 
 contract ProofOfProduceQuality {
   struct ProofEntry {
-    bool exists; 
     address owner;
     string encryptedProof;
     string publicProof;
@@ -24,7 +23,7 @@ contract ProofOfProduceQuality {
     
     // if we don't already have this trackingId- add it
     if (!hasProof(trackingId)) {
-      proofs[trackingId] = ProofEntry(true, msg.sender, encryptedProof, publicProof, "root");
+      proofs[trackingId] = ProofEntry(msg.sender, encryptedProof, publicProof, "root");
       return true;
     }
     
@@ -42,7 +41,7 @@ contract ProofOfProduceQuality {
         return false;
       }
 
-      proofs[trackingId] = ProofEntry(true, msg.sender, encryptedProof, publicProof, previousTrackingId);
+      proofs[trackingId] = ProofEntry(msg.sender, encryptedProof, publicProof, previousTrackingId);
       return true;
     }
 
@@ -70,7 +69,7 @@ contract ProofOfProduceQuality {
 
   // returns true if proof is stored
   function hasProof(string trackingId) constant internal returns(bool exists) {
-    return proofs[trackingId].exists;
+    return proofs[trackingId].owner != address(0);
   }
 
 
