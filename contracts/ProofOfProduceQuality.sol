@@ -15,44 +15,50 @@ contract ProofOfProduceQuality {
   mapping (string => mapping (address => bool )) private isTransfered;
 
 
-  event TrackingStarted(
+  event StoreProofCompleted(
     address from,
+    string trackingId,
+    string previousTrackingId
+  );
+
+  event TransferCompleted(
+    address from,
+    address to,
     string trackingId
   );
+
 
   function ProofOfProduceQuality() {
 
   }
 
-  // create a new tracking and store the inital proof
-  function startTracking(string trackingId, string encryptedProof, string publicProof) returns(bool success) {
-    
-    // if we don't already have this trackingId- add it
-    if (!hasProof(trackingId)) {
-      proofs[trackingId] = ProofEntry(msg.sender, encryptedProof, publicProof, "root");
-      TrackingStarted(msg.sender, trackingId);
-      return true;
-    }
-    
-    // we already have this trackingId
-    return false;
-  }
-
-  // add a proof to an existing tracking - requires that the previousOwner transfered the ownership 
+  // add a proof to an existing tracking - requires that
+  // the previousOwner transfered the ownership 
   function storeProof(string trackingId, string previousTrackingId, string encryptedProof, string publicProof) returns(bool success) {
     
     // if we don't already have this trackingId
-    if (!hasProof(trackingId)) {
-      if (isTransfered[previousTrackingId][msg.sender] == false) {
+    if (hasProof(trackingId)) {
+      // already exists- return
+      return false;
+    }
+
+    // if previous tracking Id was provided
+    if (sha3(previousTrackingId) != sha3("root")) {
+      
+      // if the caller is not the owner of the previousId and 
+      // he didn't transfer it to the caller, return
+      // this will terminate the tx if the previous tracking id doesn't exist
+      ProofEntry memory pe = getProofInternal(previousTrackingId);
+      if (msg.sender != pe.owner && !isTransfered[previousTrackingId][msg.sender]) {
         // no rights to use previousTrackingId. Owner need to transfer the trackingId first
         return false;
       }
 
-      proofs[trackingId] = ProofEntry(msg.sender, encryptedProof, publicProof, previousTrackingId);
-      return true;
     }
 
-    return false;
+    proofs[trackingId] = ProofEntry(msg.sender, encryptedProof, publicProof, previousTrackingId);
+    StoreProofCompleted(msg.sender, trackingId, previousTrackingId);
+    return true;
   }
 
   function transfer(string trackingId, address newOwner) returns(bool success) {
@@ -63,6 +69,7 @@ contract ProofOfProduceQuality {
 
         // TODO: ask Beat- why not just change the owner in the ProofEntry? why do we need the isTransfered mapping?
         // in this case, there might be multiple owners. Is this what we want?
+        TransferCompleted(msg.sender, newOwner, trackingId);
         isTransfered[trackingId][newOwner] = true;
       }
 
