@@ -69,8 +69,8 @@ contract ProofOfProduceQuality {
 
         // TODO: ask Beat- why not just change the owner in the ProofEntry? why do we need the isTransfered mapping?
         // in this case, there might be multiple owners. Is this what we want?
-        TransferCompleted(msg.sender, newOwner, trackingId);
         isTransfered[trackingId][newOwner] = true;
+        TransferCompleted(msg.sender, newOwner, trackingId);
       }
 
       // TODO: ask Beat- why do we want to return true if the tx sender is not the owner? 
