@@ -1,0 +1,26 @@
+{
+  "name": "ibera-smart-contracts",
+  "version": "1.0.0",
+  "description": "iBera smart contract",
+  "main": "deploy.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CatalystCode/ibera-smart-contracts.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CatalystCode/ibera-smart-contracts/issues"
+  },
+  "homepage": "https://github.com/CatalystCode/ibera-smart-contracts#readme",
+  "dependencies": {
+    "solc": "^0.4.15",
+    "web3": "^1.0.0-beta.18"
+  }
+}
