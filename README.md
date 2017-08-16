@@ -112,3 +112,30 @@ Once the block containing the contract has been added to the chain, we can test 
 ```
 truffle test
 ```
+
+## Use the deploy.js script
+Make sure you have Node.js version 7.6.0 and above.
+Run the following command to deploy the script to any RPC endpoint:
+
+```
+node deploy.js <CONTRACT_NAME> <RPC_ENDPOINT> <COINBASE_PASSWORD>
+```
+
+Example:
+
+```
+node deploy ProofOfProduceQuality http://40.68.224.232:8545 MyPassword
+```
+
+In case of an error, the process will be terminated with an error exit code and the last output line will be a json containing an `error` member with the details of the error:
+
+```json
+{"error":"the error details"}
+```
+
+In case of a successful execution, the process will be terminated with a success exit code (0) and the last output line will be a json containing the account address (the coinbase) and the deployed contract instance address:
+
+```json
+{"accountAddress":"0x6290feb5d6155bb8ca4551bae08564afb636a974","contractAddress":"0x44D89F52f93D1bF9A0F47330B5726B0d82cD8176"}
+```
+
