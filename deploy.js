@@ -50,7 +50,7 @@ var deployContract = async (opts) => {
     var sendRequest = await callAsyncFunc(deployResult, 'send', {
       from: accountAddress,
       gas: estimateGas,
-      password: 'Password12345'
+      password: accountPassword
     });
     var txHash = sendRequest.result;
     
