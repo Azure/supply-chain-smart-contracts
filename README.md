@@ -1,7 +1,7 @@
 # ibera-smart-contracts
 
 ### install test-rpc locally
-install [testrpc](https://github.com/ethereumjs/testrpc) as your local geth-rpc or use the Docker image
+install [testrpc](https://github.com/ethereumjs/testrpc) as your local geth-rpc or use the Docker image - if you run into problems building the image on Windows, simply build it in the Ubuntu subsystem on Windows. Here a [description](https://blog.jayway.com/2017/04/19/running-docker-on-bash-on-windows/) how to use the windows docker daemon from within the Linux subsystem. 
 
 ### install geth locally 
 follow these [instructions to install geth](https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum)
@@ -40,11 +40,11 @@ npm install -global truffle
 
 start test-rpc:
 ```
-docker run -d -p 8545:8545 ethereumjs/testrpc:latest -a 10
+docker run -d -p 8545:8545 ethereumjs/testrpc:latest -a 10 -u0 -u1
 ```
 or in attached mode to see the transactions:
 ```
-docker run -p 8545:8545 ethereumjs/testrpc:latest -a 10
+docker run -p 8545:8545 ethereumjs/testrpc:latest -a 10 -u0 -u1
 ```
 
 ## Test in Testnet mode
