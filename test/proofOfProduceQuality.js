@@ -1,35 +1,37 @@
-var ProofOfProduceQuality = artifacts.require("./ProofOfProduceQuality.sol");
+
+var ProofOfProduceQuality = artifacts.require("../contracts/ProofOfProduceQuality.sol");
 
 contract('ProofOfProduceQuality', function(accounts) {
-  it("creates new proof", function() {
+  it("stores proofs and retreives them", function() {
+
+    var trackingId0 = "root";
+    var trackingId1 = "trackingId1";
+    var trackingId2 = "trackingId2";
+
     var proofValue1 = "publicProof1";
     var proofValue2 = "publicProof2";
+
     return ProofOfProduceQuality.deployed().then(function(instance) {
-      return instance.startTracking("t1", "0x1234", proofValue1).then(function(value){
-      if (value.valueOf()) {
-          instance.getPublicProof.call("t1").then(function(value) {
-            assert.equal(value.valueOf(), proofValue1, "public Proof 1");
-            instance.getPreviousTrackingId.call("t1").then(function(value) {
-              assert.equal(value.valueOf(), "root", "Previous Tracking Id -root");
-            });
-            instance.transfer("t1", accounts[0]).then(function(value){
-              instance.storeProof("t2", "t1", "0x1234", proofValue2).then(function(value){
-                instance.getPublicProof.call("t2").then(function(value) {
-                  assert.equal(value.valueOf(), proofValue2, "public Proof 2");
-                });
-                instance.getPreviousTrackingId.call("t2").then(function(value) {
-                  assert.equal(value.valueOf(), "t1", "Previous Tracking Id - t1");
-                });
-              });
-            });
-            instance.startTracking("t1", "0x1234", proofValue2).then(function(value){
-              instance.getPublicProof.call("t1").then(function(value) {
-                assert.equal(value.valueOf(), proofValue1, "additional startTracking is not changing the proof");
-              });
-            });
+      return instance.storeProof(trackingId1,trackingId0,proofValue1,proofValue1).then(function(value){
+        assert(value);
+
+        instance.storeProof(trackingId2,trackingId1,proofValue2,proofValue2).then(function(value){
+          assert(value);
+
+          instance.getProof(trackingId2).then(function(proof2){
+            console.log('proof2=' + JSON.stringify(proof2));
+            assert.equal(proof2[1],proofValue2);
+            assert.equal(proof2[3],trackingId1);
           });
-       }
-      });
+        });
+        
+        instance.getProof(trackingId1).then(function(proof1){
+          console.log('proof1=' + JSON.stringify(proof1));
+          assert.equal(proof1[1],proofValue1);
+          assert.equal(proof1[3],trackingId0);
+        });
+      }
+    );
     });
   });
 });
