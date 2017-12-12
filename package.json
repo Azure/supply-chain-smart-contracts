@@ -1,7 +1,7 @@
 {
-  "name": "ibera-smart-contracts",
+  "name": "supply-chain-smart-contracts",
   "version": "1.0.0",
-  "description": "iBera smart contract",
+  "description": "Supply Chain smart contract",
   "main": "deploy.js",
   "directories": {
     "test": "test"
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CatalystCode/ibera-smart-contracts.git"
+    "url": "git+https://github.com/CatalystCode/supply-chain-smart-contracts.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/CatalystCode/ibera-smart-contracts/issues"
+    "url": "https://github.com/CatalystCode/supply-chain-smart-contracts/issues"
   },
-  "homepage": "https://github.com/CatalystCode/ibera-smart-contracts#readme",
+  "homepage": "https://github.com/CatalystCode/supply-chain-smart-contracts#readme",
   "dependencies": {
     "solc": "^0.4.15",
     "web3": "^1.0.0-beta.18"

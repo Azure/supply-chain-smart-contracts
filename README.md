@@ -1,4 +1,4 @@
-# ibera-smart-contracts
+# supply-chain-smart-contracts
 
 ### install test-rpc locally
 install [testrpc](https://github.com/ethereumjs/testrpc) as your local geth-rpc or use the Docker image - if you run into problems building the image on Windows, simply build it in the Ubuntu subsystem on Windows. Here a [description](https://blog.jayway.com/2017/04/19/running-docker-on-bash-on-windows/) how to use the windows docker daemon from within the Linux subsystem. 
@@ -12,7 +12,7 @@ https://github.com/Azure/azure-quickstart-templates/tree/master/go-ethereum-on-u
 
 Once the resource has been deployed, create a VPN to ensure the VM is isn't publicly accessible. Add a the geth-rpc port 8545 as an inbound security rule to the Nnewtwork security group (in addition to ssh). Also allow outbound traffic on all ports (or the geth peer network port only (which is ????)) to ensure that geth can connect to it's peers.
 
-To create the VPN, it might be best to first deploy the [services](https://github.com/cloudbeatsch/ibera-services) and create the VPN including the gateway through the WebApp's Networking settings. This will allow to create a VPN which includes the vpn gateway.
+To create the VPN, it might be best to first deploy the [services](https://github.com/cloudbeatsch/supply-chain-services) and create the VPN including the gateway through the WebApp's Networking settings. This will allow to create a VPN which includes the vpn gateway.
 
 ## Dependencies
 
