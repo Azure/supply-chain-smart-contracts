@@ -10,14 +10,14 @@
       "name": "Launch Program",
       "program": "${workspaceRoot}\\deploy.js",
       "args": [
-        "ProofOfProduceQuality", "http://40.68.224.232:8545", "Password12345"
+        "ProofOfProduceQuality", "http://104.40.181.78:8545", "AUser1234567"
       ],
 
       "args_local": [
         "ProofOfProduceQuality", "http://localhost:8545", "Pa$$word1"
       ],
       "args_preview": [
-        "ProofOfProduceQuality", "http://40.68.224.232:8545", "Password12345"
+        "ProofOfProduceQuality", "http://104.40.181.78:8545", "AUser1234567"
       ],
       "args_prod": [
         "ProofOfProduceQuality", "http://ibr10lqwj.westeurope.cloudapp.azure.com:8545", "Password12345"

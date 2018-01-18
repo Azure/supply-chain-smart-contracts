@@ -27,35 +27,29 @@ var deployContract = async (opts) => {
     var compiledContract = output.contracts[`:${contractName}`];
     const bytecode = '0x' + compiledContract.bytecode;
     const abi = JSON.parse(compiledContract.interface);
-    const contract = new web3.eth.Contract(abi);
+    const contract = web3.eth.contract(abi);
 
     // get coinbase address
     var getCoinbaseRequest = await callAsyncFunc(web3.eth, 'getCoinbase');
     var accountAddress = getCoinbaseRequest.result;
 
-    // deploy contract
-    var deployResult = contract.deploy({ data: bytecode });
-
-    // estimate how much gas we need to deploy this contract
-    var estimateGasRequest = await callAsyncFunc(deployResult, 'estimateGas');
-    var estimateGas = estimateGasRequest.result;
-
     // unlock the account
-    var unlockRes = await callAsyncFunc(web3.eth.personal, 'unlockAccount', accountAddress, accountPassword);
+    var unlockRes = await callAsyncFunc(web3.personal, 'unlockAccount', accountAddress, accountPassword);
     if (!unlockRes.result) {
       throw new Error(`error unlocking account: ${accountAddress}`);
     }
-    
-    // send deploy contract transaction
-    var sendRequest = await callAsyncFunc(deployResult, 'send', {
-      from: accountAddress,
-      gas: estimateGas,
-      password: accountPassword
-    });
-    var txHash = sendRequest.result;
+
+    // deploy contract
+    var deployResult = contract.new(accountAddress, { 
+      from: accountAddress, 
+      password: accountPassword,
+      data: bytecode, 
+      gas: 2000000 });
+
+    var txHash = deployResult.transactionHash;
     
     // lock the account
-    var lockRes = await callAsyncFunc(web3.eth.personal, 'lockAccount', accountAddress, accountPassword);
+    var lockRes = await callAsyncFunc(web3.personal, 'lockAccount', accountAddress, accountPassword);
     if (!lockRes) {
       throw new Error(`error locking account: ${opts.config.from}`);
     }

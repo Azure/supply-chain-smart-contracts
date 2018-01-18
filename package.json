@@ -21,6 +21,6 @@
   "homepage": "https://github.com/CatalystCode/supply-chain-smart-contracts#readme",
   "dependencies": {
     "solc": "^0.4.15",
-    "web3": "^1.0.0-beta.18"
+    "web3": "^0.20.4"
   }
 }
